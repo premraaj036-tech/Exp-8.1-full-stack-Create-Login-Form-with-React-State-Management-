@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>React Login Form</title>
+<script src="https://unpkg.com/react@17/umd/react.development.js"></script>
+<script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<style>
+* {
+margin: 0;
+padding: 0;
+box-sizing: border-box;
+font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+body {
+background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+min-height: 100vh;
+display: flex;
+justify-content: center;
+align-items: center;
+padding: 20px;
+}
+.login-container {
+background: white;
+border-radius: 10px;
+box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+width: 100%;
+max-width: 400px;
+padding: 30px;
+}
+.login-title {
+text-align: center;
+margin-bottom: 30px;
+color: #333;
+font-size: 24px;
+font-weight: 600;
+}
+.login-form {
+display: flex;
+flex-direction: column;
+}
+.form-group {
+margin-bottom: 20px;
+}
+label {
+display: block;
+margin-bottom: 8px;
+font-weight: 500;
+color: #555;
+}
+input {
+width: 100%;
+padding: 12px 15px;
+border: 1px solid #ddd;
+border-radius: 5px;
+font-size: 16px;
+transition: border-color 0.3s;
+}
+input:focus {
+border-color: #667eea;
+outline: none;
+box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.2);
+}
+.login-button {
+background: #667eea;
+color: white;
+border: none;
+border-radius: 5px;
+padding: 12px;
+font-size: 16px;
+font-weight: 600;
+cursor: pointer;
+transition: background 0.3s;
+margin-top: 10px;
+}
+.login-button:hover {
+background: #5a6fd8;
+}
+.validation-message {
+color: #e74c3c;
+text-align: center;
+margin-top: 15px;
+font-size: 14px;
+min-height: 20px;
+}
+.console-output {
+background: #2c3e50;
+color: #ecf0f1;
+border-radius: 5px;
+padding: 15px;
+margin-top: 20px;
+font-family: 'Courier New', monospace;
+font-size: 14px;
+max-height: 200px;
+overflow-y: auto;
+}
+.console-title {
+color: #bdc3c7;
+margin-bottom: 10px;
+font-size: 14px;
+}
+.success-message {
+color: #2ecc71;
+text-align: center;
+margin-top: 15px;
+font-weight: 500;
+}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+const { useState } = React;
+const LoginForm = () => {
+const [username, setUsername] = useState('');
+const [password, setPassword] = useState('');
+const [error, setError] = useState('');
+const [isSubmitted, setIsSubmitted] = useState(false);
+const [consoleLogs, setConsoleLogs] = useState([]);
+const handleSubmit = (e) => {
+e.preventDefault();
+// Clear previous errors
+setError('');
+// Validation
+if (!username || !password) {
+setError('Please enter both username and password.');
+return;
+}
+// Log to console (and our UI console)
+const logMessage = `Login attempt - Username: ${username}, Password: ${password}`;
+console.log(logMessage);
+setConsoleLogs(prev => [...prev, logMessage]);
+// For demo purposes, we'll simulate a successful login
+setIsSubmitted(true);
+// Reset form after 2 seconds
+setTimeout(() => {
+setUsername('');
+setPassword('');
+setIsSubmitted(false);
+}, 2000);
+};
+return (
+<div className="login-container">
+<h1 className="login-title">Login</h1>
+<form className="login-form" onSubmit={handleSubmit}>
+<div className="form-group">
+<label htmlFor="username">Username</label>
+<input
+type="text"
+id="username"
+value={username}
+onChange={(e) => setUsername(e.target.value)}
+placeholder="Enter your username"
+/>
+</div>
+<div className="form-group">
+<label htmlFor="password">Password</label>
+<input
+type="password"
+id="password"
+value={password}
+onChange={(e) => setPassword(e.target.value)}
+placeholder="Enter your password"
+/>
+</div>
+<button type="submit" className="login-button">Login</button>
+<div className="validation-message">
+{error && <span>{error}</span>}
+</div>
+{isSubmitted && (
+<div className="success-message">
+Login successful! Check the console for details.
+</div>
+)}
+</form>
+<div className="console-output">
+<div className="console-title">Console Output:</div>
+{consoleLogs.length === 0 ? (
+<div>No logs yet. Submit the form to see logs.</div>
+) : (
+consoleLogs.map((log, index) => (
+<div key={index}>{log}</div>
+))
+)}
+</div>
+</div>
+);
+};
+ReactDOM.render(<LoginForm />, document.getElementById('root'));
+</script>
+</body>
+</html>
